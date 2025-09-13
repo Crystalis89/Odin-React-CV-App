@@ -1,37 +1,51 @@
-export default EducationInfoCV
+export {EducationInfoEdit, EducationEntryCard}
 
-function EducationInfoCV(props) {
-    console.log(props[0])
-
-   
+function EducationInfoEdit(props) {
     // console.log(props)
-
-    // const props = {name:'John Smith', email:'test', phone: '1234567890', address: '123 Home Drive, PA 12345', linkedin: 'linkedinlink', github:'githublink'}
   
+    // const props = {name:'John Smith', email:'test', phone: '1234567890', address: '123 Home Drive, PA 12345', linkedin: 'linkedinlink', github:'githublink'}
 
     // Now that I got the generation of the element working now need to build it's interactivity
-    // const randomid = crypto.randomUUID()
-    return <form>
-        <label htmlFor='school' >School</label>
-        <input type="text" id='school' name='school'/>
 
-        <label htmlFor='degree' >Degree</label>
-        <input type="text" id='degree' name='degree'/>
+    return <>
+        <label htmlFor='EDUschool' >School</label>
+        <input type="text" id='EDUschool' name='school'/>
 
-        <label htmlFor='startdate' >Start Date</label>
-        <input type="date" id='startdate' name='startdate'/>
+        <label htmlFor='EDUdegree' >Degree</label>
+        <input type="text" id='EDUdegree' name='degree'/>
 
-        <label htmlFor='enddate' >End Date</label>
-        <input type="date" id='enddate' name='enddate'/>
+        <label htmlFor='EDUstartdate' >Start Date</label>
+        <input type="date" id='EDUstartdate' name='startdate'/>
+
+        <label htmlFor='EDUenddate' >End Date</label>
+        <input type="date" id='EDUenddate' name='enddate'/>
         
-        <label htmlFor='location' >Location</label>
-        <input type="text" id='location' name='location' />
+        <label htmlFor='EDUlocation' >Location</label>
+        <input type="text" id='EDUlocation' name='location' />
+        
+        <label htmlFor='EXPdescription' >Description</label>
+        <input type="text" id='EXPdescription' name='description' />
 
-        <button id="expandbutton"  onClick={() => props.onClick('educationinfo')}>Save</button>
-    </form>
+        <button id="EDUsavebutton" onClick={() => props.onClick('educationinfo')}>Save</button>
+    </>
 
 }
 
-// function EducationInfoEntry(props) {
-    
-// }
+
+function EducationEntryCard(props) {
+    let cardcollection = []
+    let slicedprops = props.props.slice(1)
+
+    slicedprops.map((entry) => {
+        cardcollection.push(<li className="EDUCard" key={entry.id} id={entry.id}>
+            <h3 >{entry.EDUschool}</h3>
+            <button>Reveal</button>
+        </li>)
+
+    })
+
+    console.log(cardcollection)
+   
+
+    return cardcollection
+}

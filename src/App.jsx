@@ -1,8 +1,8 @@
 import { useState } from 'react'
 // import reactLogo from './assets/react.svg'
 // import viteLogo from '/vite.svg'
-import EducationInfoCV from './components/educationinfo.jsx'
-import ExperienceInfoCV from './components/experienceinfo.jsx'
+import {EducationInfoEdit, EducationEntryCard} from './components/educationinfo.jsx'
+import {ExperienceInfoEdit, ExperienceEntryCard} from './components/experienceinfo.jsx'
 import {PersonalInfoEdit, PersonalInfoTemplate} from './components/personalinfo.jsx'
 
 import './App.css'
@@ -12,40 +12,41 @@ function App() {
   const [personalinfo, setPInfo] = useState({mode:'edit'})
 
   // The first value for both of these is a boolean to check for if the menu is expanded or not.
-  const [educationinfo, setEduInfo] = useState([false])
-  const [experienceinfo, setExpInfo] = useState([false])
+  const [educationinfo, setEduInfo] = useState([true])
+  const [experienceinfo, setExpInfo] = useState([true])
   let picontent
   let educontent = []
   let expcontent = []
-
-
-
+  
   // {name:'John Smith', email:'test', phone: '1234567890', address: '123 Home Drive, PA 12345', linkedin: 'linkedinlink', github:'githublink'}
 
-// setPInfo()
 // console.log(personalinfo)
   function handleSave(formcategory, mode) {
     let newInfo = {}
+   
 
     if (personalinfo.mode === 'save') {
       
       newInfo = {...personalinfo, mode:'edit'}
+     } else {
+        const inputs = [...document.querySelectorAll(`#cv__${formcategory} input`)]
 
-    
-    } else {
-          const inputs = [...document.querySelectorAll(`#cv__${formcategory} input`)]
+            // console.log(inputs)
+
          inputs.map((input) => {
-      newInfo[input.id] = input.value
-    })
+        newInfo[input.id] = input.value
+      })
+    if (newInfo['id'] === undefined && formcategory !== 'personalinfo') {
+      newInfo['id'] = crypto.randomUUID()
+    }
+      // console.log(newInfo)
     }
    
-    
-    // Check if there is an ID already in state, if not use crypto.randomUUID() to generate one.
 
     switch (true) {
       case (formcategory === 'personalinfo'):
         newInfo.mode = mode
-        console.log(newInfo)
+        // console.log(newInfo)
 
         setPInfo(newInfo)
           
@@ -53,12 +54,17 @@ function App() {
 
       case (formcategory === 'educationinfo'):
 
+        newInfo = [...educationinfo, newInfo]
+        console.log(newInfo)
+
         setEduInfo(newInfo)
 
         break;
 
       case (formcategory === 'experienceinfo'):
-       
+        newInfo = [...experienceinfo, newInfo]
+                console.log(newInfo)
+
         setExpInfo(newInfo)
 
         break;
@@ -66,6 +72,7 @@ function App() {
       default:
         break;
     }
+    // console.log(newInfo)
   }
 
   function handleExpand(event) {
@@ -84,11 +91,12 @@ function App() {
     } 
     
     if (event.target.value === 'experience') {
-      console.log('experience')
+      // console.log('experience')
       newinfo = [...experienceinfo]
       newinfo[0] !== true ? newinfo[0] = true : newinfo[0] = false
       setExpInfo(newinfo)
     }
+       console.log(newinfo)
 
   }
 
@@ -104,26 +112,28 @@ function App() {
           />
   }
 
-  
-
-
-
   if (educationinfo[0] === true) {
-    educontent = <EducationInfoCV 
+    educontent = <><EducationInfoEdit 
           props = {educationinfo} 
           onClick={handleSave}
-          />        
+          />
+        <EducationEntryCard props = {educationinfo}/>
+        </>        
         } else {
           educontent = <></>
         }
 
-  if (experienceinfo[0] === true) {
-    console.log(true)
-    expcontent = <ExperienceInfoCV 
-          props = {experienceinfo} 
-          onClick={handleSave}
 
-          />         
+
+  if (experienceinfo[0] === true) {
+    console.log(experienceinfo)
+    expcontent = <>
+          <ExperienceInfoEdit 
+            props = {experienceinfo} 
+            onClick={handleSave}
+            />
+            <ExperienceEntryCard props = {experienceinfo}/>
+            </>
         } else {
           expcontent = <></>
         }
@@ -140,20 +150,21 @@ function App() {
 
         </section>
 
-        <section id="cv__education">
-          <h1>Education</h1>
-          <button onClick={handleExpand} value={'education'}>Expand</button>
-        
-          {educontent}
-
-        </section>
-
-        <section id="cv__experience">
+       <section id="cv__experienceinfo">
           <h1>Experience</h1>
           <button onClick={handleExpand} value={'experience'}>Expand</button>          
           {expcontent}
 
-      </section>
+        </section>
+
+         <section id="cv__educationinfo">
+          <h1>Education</h1>
+          <button onClick={handleExpand} value={'education'}>Expand</button>          
+          {educontent}
+
+          </section>
+
+        
         
       </section>
     </>
