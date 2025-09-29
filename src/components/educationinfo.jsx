@@ -1,32 +1,34 @@
 export {EducationInfoEdit, EducationEntryCard}
 
 function EducationInfoEdit(props) {
-    // console.log(props)
-  
-    // const props = {name:'John Smith', email:'test', phone: '1234567890', address: '123 Home Drive, PA 12345', linkedin: 'linkedinlink', github:'githublink'}
-
-    // Now that I got the generation of the element working now need to build it's interactivity
+      let data
+        if (props.props === undefined) {
+            data = {EXPcompanyname:'', EXPtitle:'', EXPstartdate: '', EXPenddate: '', EXPlocation:''}
+        } else {
+            data = props.props
+        }
 
     return <>
         <label htmlFor='EDUschool' >School</label>
-        <input type="text" id='EDUschool' name='school'/>
+        <input type="text" id='EDUschool' name='school' defaultValue={data.EDUschool}/>
 
         <label htmlFor='EDUdegree' >Degree</label>
-        <input type="text" id='EDUdegree' name='degree'/>
+        <input type="text" id='EDUdegree' name='degree' defaultValue={data.EDUdegree}/>
 
         <label htmlFor='EDUstartdate' >Start Date</label>
-        <input type="date" id='EDUstartdate' name='startdate'/>
+        <input type="date" id='EDUstartdate' name='startdate' defaultValue={data.EDUstartdate}/>
 
         <label htmlFor='EDUenddate' >End Date</label>
-        <input type="date" id='EDUenddate' name='enddate'/>
+        <input type="date" id='EDUenddate' name='enddate'defaultValue={data.EDUenddate}/>
         
         <label htmlFor='EDUlocation' >Location</label>
-        <input type="text" id='EDUlocation' name='location' />
+        <input type="text" id='EDUlocation' name='location' defaultValue={data.EDUlocation}/>
         
         <label htmlFor='EXPdescription' >Description</label>
-        <input type="text" id='EXPdescription' name='description' />
+        <input type="text" id='EXPdescription' name='description' defaultValue={data.EDUdescription}/>
 
-        <button id="EDUsavebutton" onClick={() => props.onClick('educationinfo')}>Save</button>
+        <button id="EDUsavebutton" onClick={() => props.onClick('educationinfo', data.id)}>Save</button>
+
     </>
 
 }
@@ -34,17 +36,16 @@ function EducationInfoEdit(props) {
 
 function EducationEntryCard(props) {
     let cardcollection = []
-    let slicedprops = props.props.slice(1)
-
+    let slicedprops = props.props.slice(3)
+    console.log(slicedprops)
     slicedprops.map((entry) => {
-        cardcollection.push(<li className="EDUCard" key={entry.id} id={entry.id}>
+        cardcollection.push(<li className="EDUCard" key={entry.id} id={entry.id} onClick={() => props.onClick('educationinfo', entry.id)
+}>
             <h3 >{entry.EDUschool}</h3>
-            <button>Reveal</button>
         </li>)
 
     })
 
-    console.log(cardcollection)
    
 
     return cardcollection

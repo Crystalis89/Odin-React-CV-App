@@ -7,103 +7,137 @@ import {PersonalInfoEdit, PersonalInfoTemplate} from './components/personalinfo.
 
 import './App.css'
 
-
+// Still need to get updating of the edited entries working. I think issue is in how passing id between the functions and components.
+// Finally add the data compilation/formatting page
 function App() {
-  const [personalinfo, setPInfo] = useState({mode:'edit'})
+    const placeholder = {mode:'saved', PIname:'John Smith', PIemail:'test', PIphone: '1234567890', PIaddress: '123 Home Drive, PA 12345', PIlinkedin: 'linkedinlink', PIgithub:'githublink', id:'personalinfo'}
 
+  const [personalinfo, setPInfo] = useState(placeholder)
   // The first value for both of these is a boolean to check for if the menu is expanded or not.
-  const [educationinfo, setEduInfo] = useState([true])
-  const [experienceinfo, setExpInfo] = useState([true])
+  const [experienceinfo, setExpInfo] = useState([true, 'saved', -1])
+
+  const [educationinfo, setEduInfo] = useState([true, 'saved', -1])
   let picontent
   let educontent = []
   let expcontent = []
-  
-  // {name:'John Smith', email:'test', phone: '1234567890', address: '123 Home Drive, PA 12345', linkedin: 'linkedinlink', github:'githublink'}
 
-// console.log(personalinfo)
-  function handleSave(formcategory, mode) {
+
+  function handleSave(formcategory, entryid) {
+    // console.log(event.target)
+    console.log(entryid)
     let newInfo = {}
-   
+    const category = (formcategory === 'educationinfo'? educationinfo : formcategory === 'experienceinfo' ? experienceinfo : personalinfo)        
+    const inputs = [...document.querySelectorAll(`#cv__${formcategory} input`)]
+    const targetindex = (formcategory === 'personalinfo' ? -1 : category.findIndex(entry => {entry.id === entryid}))
+            console.log(targetindex)
 
-    if (personalinfo.mode === 'save') {
-      
-      newInfo = {...personalinfo, mode:'edit'}
-     } else {
-        const inputs = [...document.querySelectorAll(`#cv__${formcategory} input`)]
-
-            // console.log(inputs)
-
-         inputs.map((input) => {
+        inputs.map((input) => {
         newInfo[input.id] = input.value
-      })
-    if (newInfo['id'] === undefined && formcategory !== 'personalinfo') {
-      newInfo['id'] = crypto.randomUUID()
-    }
-      // console.log(newInfo)
-    }
-   
+        })
 
-    switch (true) {
+        if (targetindex === -1 && newInfo['id'] === undefined) {
+          newInfo['id'] = crypto.randomUUID()
+        } else {
+        formcategory === 'personalinfo' ? newInfo['id'] = 'personalinfo' : newInfo['id'] = category[targetindex].id}
+
+   switch (true) {
       case (formcategory === 'personalinfo'):
-        newInfo.mode = mode
-        // console.log(newInfo)
-
+    
+        newInfo.mode = 'saved'
         setPInfo(newInfo)
-          
+
         break;
+      case (formcategory === 'experienceinfo'):
+        if (targetindex != -1) {
+        let targetedentry = [...category]
+          targetedentry[targetindex] = newInfo
+          newInfo = targetedentry
+        } else {
+          newInfo = [...category, newInfo]
+        }
+        newInfo[1] = 'saved'
+ 
+        setExpInfo(newInfo)
 
+        break;
       case (formcategory === 'educationinfo'):
-
-        newInfo = [...educationinfo, newInfo]
-        console.log(newInfo)
-
+        if (targetindex != -1) {
+          let targetedentry = [...category]
+              targetedentry[targetindex] = newInfo
+              newInfo = targetedentry
+            } else {
+                newInfo = [...category, newInfo]
+            } 
+        newInfo[1] = 'saved'
         setEduInfo(newInfo)
 
+        break;  
+    
+      default:
         break;
+    }
+  } 
+
+  function handleEdit(formcategory) {
+
+    const category = (formcategory === 'educationinfo'? educationinfo : formcategory === 'experienceinfo' ? experienceinfo : [personalinfo]) 
+
+    let targetedElement = category.findIndex(entry => {return entry.id === event.target.id})
+
+    let newInfo 
+ 
+    switch (true) {
+      case (formcategory[0] === 'personalinfo'):
+
+        newInfo = {...personalinfo}
+        newInfo.mode = 'edit'
+  
+        setPInfo(newInfo)
+
+        break;    
 
       case (formcategory === 'experienceinfo'):
-        newInfo = [...experienceinfo, newInfo]
-                console.log(newInfo)
+        newInfo = [...category]
+        newInfo[1] = 'edit'
+        newInfo[2] = targetedElement
 
         setExpInfo(newInfo)
+
+        break;
+
+        case (formcategory === 'educationinfo'):
+          newInfo = [...category]
+          newInfo[1] = 'edit'
+          newInfo[2] = targetedElement
+        setEduInfo(newInfo)
 
         break;
     
       default:
         break;
     }
-    // console.log(newInfo)
   }
 
   function handleExpand(event) {
-    console.log('expand')
-    // let targetState = `${event.target.value}info`
-    let newinfo
-    // let content
-
-                // Iterate through the state data to generate as many cards as needed. Start by slicing off the first index to cut out the true/false check for expand. Then populate the entry component and include it in the content. Possibly seperate this into it's own function so can use it for when close the newentry/edit form.
-
+    let newInfo
 
     if (event.target.value === 'education') {
-      newinfo = [...educationinfo]
-      newinfo[0] !== true ? newinfo[0] = true : newinfo[0] = false
-      setEduInfo(newinfo)
+      newInfo = [...educationinfo]
+      newInfo[0] !== true ? newInfo[0] = true : newInfo[0] = false
+      setEduInfo(newInfo)
     } 
     
     if (event.target.value === 'experience') {
-      // console.log('experience')
-      newinfo = [...experienceinfo]
-      newinfo[0] !== true ? newinfo[0] = true : newinfo[0] = false
-      setExpInfo(newinfo)
+      newInfo = [...experienceinfo]
+      newInfo[0] !== true ? newInfo[0] = true : newInfo[0] = false
+      setExpInfo(newInfo)
     }
-       console.log(newinfo)
-
   }
-
-  if (personalinfo.mode === 'save') {
+  
+  if (personalinfo.mode === 'saved') {
     picontent = <PersonalInfoTemplate 
           props = {personalinfo} 
-          onClick={handleSave}
+          onClick={handleEdit}
           />
   } else {
     picontent = <PersonalInfoEdit 
@@ -112,31 +146,71 @@ function App() {
           />
   }
 
-  if (educationinfo[0] === true) {
-    educontent = <><EducationInfoEdit 
-          props = {educationinfo} 
-          onClick={handleSave}
-          />
-        <EducationEntryCard props = {educationinfo}/>
-        </>        
-        } else {
-          educontent = <></>
-        }
+ if (experienceinfo[0] === true) {
 
+  if (experienceinfo[1] === 'saved') {
+        expcontent = <>
+    <ExperienceEntryCard props = {experienceinfo}
+              onClick = {handleEdit}/> 
+    <button onClick={() => handleEdit('experienceinfo')}>Add</button>          
 
-
-  if (experienceinfo[0] === true) {
-    console.log(experienceinfo)
-    expcontent = <>
+              </>
+      } else {
+        expcontent = <>
           <ExperienceInfoEdit 
-            props = {experienceinfo} 
+            props = {experienceinfo[experienceinfo[2]]} 
             onClick={handleSave}
-            />
-            <ExperienceEntryCard props = {experienceinfo}/>
-            </>
+          />
+        </>
+      
+      }      
+  } else {
+    expcontent =  <></>
+  }
+
+  if (educationinfo[0] === true) {
+
+    if (educationinfo[1] === 'saved') {
+          educontent = <>
+      <EducationEntryCard props = {educationinfo}
+                onClick = {handleEdit}/> 
+      <button onClick={() => handleEdit('educationinfo')}>Add</button>          
+
+                </>
         } else {
-          expcontent = <></>
-        }
+          educontent = <>
+            <EducationInfoEdit 
+              props = {educationinfo[educationinfo[2]]} 
+              onClick={handleSave}
+            />
+          </>
+        
+        }      
+    } else {
+      educontent =  <></>
+    }
+  
+  // if (educationinfo[0] === true) {
+  
+  //   educontent =<>         
+  //         <EducationInfoEdit 
+        
+  //         props = {educationinfo} 
+  //         onClick={handleSave}
+  //         />
+          
+  //         <EducationEntryCard props = {educationinfo}
+  //         onClick = {handleEdit}/> 
+  //         <button onClick={() => handleEdit('experienceinfo')} value={'education'}>Add</button>          
+
+  //         </>
+       
+  // } else {
+  //   educontent = <></>
+  // }
+
+  // Something wrong wit hthe if/else
+ 
 
               
 

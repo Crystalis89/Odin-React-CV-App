@@ -1,9 +1,6 @@
 export  {PersonalInfoEdit, PersonalInfoTemplate}
 
 function PersonalInfoEdit(props) {
-    // console.log(props)
-     // const props = {name:'John Smith', email:'test', phone: '1234567890', address: '123 Home Drive, PA 12345', linkedin: 'linkedinlink', github:'githublink'}
-
 
     return <>
         <label htmlFor='PIname' >Name</label>
@@ -24,14 +21,12 @@ function PersonalInfoEdit(props) {
         <label htmlFor='PIgithub' >Github Address</label>
         <input type="text" id='PIgithub' name='github' defaultValue={props.props.PIgithub}/>
 
-        <button id="PIsavebutton"  onClick={() => props.onClick('personalinfo', 'save')}>Save</button> 
-
+        <button id="PIsavebutton"  onClick={() => props.onClick('personalinfo')}>Save</button> 
 
     </>
 }
 
 function PersonalInfoTemplate(props) {
-        // console.log(props.props)
 
     return <>
         <h2 id="PItitle__name">Name</h2>
@@ -52,7 +47,7 @@ function PersonalInfoTemplate(props) {
         <h2 htmlFor='PIgithub' >Github Address</h2>
         <p type="text" id='PIgithub' name='github' >{props.props.PIgithub}</p>
 
-        <button id="PIeditbutton"  onClick={() => props.onClick('personalinfo', 'edit')}>Edit</button> 
+        <button id="PIeditbutton"  onClick={() => props.onClick(['personalinfo'], props.props.id)}>Edit</button> 
     </>
     
 }
