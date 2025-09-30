@@ -4,15 +4,13 @@ import { useState } from 'react'
 import {EducationInfoEdit, EducationEntryCard} from './components/educationinfo.jsx'
 import {ExperienceInfoEdit, ExperienceEntryCard} from './components/experienceinfo.jsx'
 import {PersonalInfoEdit, PersonalInfoTemplate} from './components/personalinfo.jsx'
+import {CompiledSummary} from './components/compiledsummary.jsx'
 
 import './App.css'
 
-// Still need to get updating of the edited entries working. I think issue is in how passing id between the functions and components.
-// Finally add the data compilation/formatting page
 function App() {
-    const placeholder = {mode:'saved', PIname:'John Smith', PIemail:'test', PIphone: '1234567890', PIaddress: '123 Home Drive, PA 12345', PIlinkedin: 'linkedinlink', PIgithub:'githublink', id:'personalinfo'}
-
-  const [personalinfo, setPInfo] = useState(placeholder)
+   
+  const [personalinfo, setPInfo] = useState({mode:'edit', PIname:'', PIemail:'', PIphone: '', PIaddress: '', PIlinkedin: '', PIgithub:'', id:''})
   // The first value for both of these is a boolean to check for if the menu is expanded or not.
   const [experienceinfo, setExpInfo] = useState([true, 'saved', -1])
 
@@ -21,15 +19,26 @@ function App() {
   let educontent = []
   let expcontent = []
 
-
   function handleSave(formcategory, entryid) {
-    // console.log(event.target)
-    console.log(entryid)
+
     let newInfo = {}
     const category = (formcategory === 'educationinfo'? educationinfo : formcategory === 'experienceinfo' ? experienceinfo : personalinfo)        
     const inputs = [...document.querySelectorAll(`#cv__${formcategory} input`)]
-    const targetindex = (formcategory === 'personalinfo' ? -1 : category.findIndex(entry => {entry.id === entryid}))
-            console.log(targetindex)
+    let slicedprops = []
+
+
+    if (formcategory !== 'personalinfo') {
+          slicedprops = category.slice(3)
+
+    }
+    let targetindex = (formcategory === 'personalinfo' ? -1 : slicedprops.findIndex(entry => {
+            return entry.id === entryid    
+    }))
+
+    if (targetindex != -1) {
+      targetindex += 3
+
+    }
 
         inputs.map((input) => {
         newInfo[input.id] = input.value
@@ -52,11 +61,13 @@ function App() {
         let targetedentry = [...category]
           targetedentry[targetindex] = newInfo
           newInfo = targetedentry
+
         } else {
+
           newInfo = [...category, newInfo]
+
         }
         newInfo[1] = 'saved'
- 
         setExpInfo(newInfo)
 
         break;
@@ -85,7 +96,6 @@ function App() {
     let targetedElement = category.findIndex(entry => {return entry.id === event.target.id})
 
     let newInfo 
- 
     switch (true) {
       case (formcategory[0] === 'personalinfo'):
 
@@ -118,9 +128,27 @@ function App() {
     }
   }
 
+  function handleDelete(formcategory, entryid) {
+        const category = (formcategory === 'educationinfo'? educationinfo : formcategory === 'experienceinfo' ? experienceinfo : undefined)
+        let targetedElement = category.findIndex(entry => {return entry.id === entryid})
+        
+        let newInfo = [...category]
+         newInfo.splice(targetedElement, 1)
+         newInfo[1] = 'saved'
+
+
+         if (formcategory === 'educationinfo') {
+          setEduInfo(newInfo)
+         }
+
+         if (formcategory === 'experienceinfo') {
+              setExpInfo(newInfo)
+         }
+
+  }
+
   function handleExpand(event) {
     let newInfo
-
     if (event.target.value === 'education') {
       newInfo = [...educationinfo]
       newInfo[0] !== true ? newInfo[0] = true : newInfo[0] = false
@@ -145,13 +173,11 @@ function App() {
           onClick={handleSave}
           />
   }
-
  if (experienceinfo[0] === true) {
-
   if (experienceinfo[1] === 'saved') {
-        expcontent = <>
+    expcontent = <>
     <ExperienceEntryCard props = {experienceinfo}
-              onClick = {handleEdit}/> 
+    onClick = {handleEdit}/> 
     <button onClick={() => handleEdit('experienceinfo')}>Add</button>          
 
               </>
@@ -159,11 +185,11 @@ function App() {
         expcontent = <>
           <ExperienceInfoEdit 
             props = {experienceinfo[experienceinfo[2]]} 
-            onClick={handleSave}
-          />
+            onSave={handleSave}
+            onDelete={handleDelete}          />
         </>
       
-      }      
+      }
   } else {
     expcontent =  <></>
   }
@@ -181,38 +207,15 @@ function App() {
           educontent = <>
             <EducationInfoEdit 
               props = {educationinfo[educationinfo[2]]} 
-              onClick={handleSave}
+              onSave={handleSave}
+              onDelete={handleDelete}
             />
           </>
         
         }      
     } else {
       educontent =  <></>
-    }
-  
-  // if (educationinfo[0] === true) {
-  
-  //   educontent =<>         
-  //         <EducationInfoEdit 
-        
-  //         props = {educationinfo} 
-  //         onClick={handleSave}
-  //         />
-          
-  //         <EducationEntryCard props = {educationinfo}
-  //         onClick = {handleEdit}/> 
-  //         <button onClick={() => handleEdit('experienceinfo')} value={'education'}>Add</button>          
-
-  //         </>
-       
-  // } else {
-  //   educontent = <></>
-  // }
-
-  // Something wrong wit hthe if/else
- 
-
-              
+    }             
 
   return (
     <>
@@ -236,10 +239,15 @@ function App() {
           <button onClick={handleExpand} value={'education'}>Expand</button>          
           {educontent}
 
-          </section>
-
+          </section>      
         
-        
+      </section>
+      <section id='compiledsummary__container'>
+        <CompiledSummary 
+          personalinfo={personalinfo}
+          experienceinfo={experienceinfo}
+          educationinfo={educationinfo}
+        />
       </section>
     </>
   )

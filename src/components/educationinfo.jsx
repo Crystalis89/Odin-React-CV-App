@@ -7,7 +7,6 @@ function EducationInfoEdit(props) {
         } else {
             data = props.props
         }
-
     return <>
         <label htmlFor='EDUschool' >School</label>
         <input type="text" id='EDUschool' name='school' defaultValue={data.EDUschool}/>
@@ -24,10 +23,8 @@ function EducationInfoEdit(props) {
         <label htmlFor='EDUlocation' >Location</label>
         <input type="text" id='EDUlocation' name='location' defaultValue={data.EDUlocation}/>
         
-        <label htmlFor='EXPdescription' >Description</label>
-        <input type="text" id='EXPdescription' name='description' defaultValue={data.EDUdescription}/>
-
-        <button id="EDUsavebutton" onClick={() => props.onClick('educationinfo', data.id)}>Save</button>
+         <button id="EDUsavebutton" onClick={() => props.onSave('educationinfo', data.id)}>Save</button>
+        <button id="EDUdeletebutton" onClick={() => props.onDelete('educationinfo', data.id)}>Delete</button>        
 
     </>
 
@@ -37,7 +34,6 @@ function EducationInfoEdit(props) {
 function EducationEntryCard(props) {
     let cardcollection = []
     let slicedprops = props.props.slice(3)
-    console.log(slicedprops)
     slicedprops.map((entry) => {
         cardcollection.push(<li className="EDUCard" key={entry.id} id={entry.id} onClick={() => props.onClick('educationinfo', entry.id)
 }>

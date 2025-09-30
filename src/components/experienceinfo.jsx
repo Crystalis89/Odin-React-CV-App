@@ -3,7 +3,7 @@ export {ExperienceInfoEdit, ExperienceEntryCard}
 function ExperienceInfoEdit(props) {
     let data
         if (props.props === undefined) {
-            data = {EXPcompanyname:'', EXPtitle:'', EXPstartdate: '', EXPenddate: '', EXPlocation:''}
+            data = {EXPcompanyname:'', EXPtitle:'', EXPstartdate: '', EXPenddate: '', EXPlocation:'', EXPdescription: ''}
         } else {
             data = props.props
         }
@@ -12,19 +12,22 @@ function ExperienceInfoEdit(props) {
         <input type="text" id='EXPcompanyname' name='companyname' defaultValue={data.EXPcompanyname}/>
 
         <label htmlFor='EXPtitle' >Position Title</label>
-        <input type="date" id='EXPtitle' name='title' defaultValue={data.EXPtitle}/>
+        <input type="text" id='EXPtitle' name='title' defaultValue={data.EXPtitle}/>
 
         <label htmlFor='EXPstartdate' >Start Date</label>
         <input type="date" id='EXPstartdate' name='startdate'defaultValue={data.EXPstartdate}/>
 
         <label htmlFor='EXPenddate' >End Date</label>
-        <input type="text" id='EXPenddate' name='enddate' defaultValue={data.EXPenddate}/>
+        <input type="date" id='EXPenddate' name='enddate' defaultValue={data.EXPenddate}/>
         
         <label htmlFor='EXPlocation' >Location</label>
         <input type="text" id='EXPlocation' name='location' defaultValue={data.EXPlocation}/>
 
-        <button id="EXPsavebutton" onClick={() => props.onClick('experienceinfo', data.id)}>Save</button>
+        <label htmlFor='EXPdescription' >Description</label>
+        <input type="text" id='EXPdescription' name='description' defaultValue={data.EXPdescription}/>
 
+        <button id="EXPsavebutton" onClick={() => props.onSave('experienceinfo', data.id)}>Save</button>
+        <button id="EXPdeletebutton" onClick={() => props.onDelete('experienceinfo', data.id)}>Delete</button>                
     </>
 }
 
@@ -41,6 +44,5 @@ function ExperienceEntryCard(props) {
         </li>)
 
     })
-
     return cardcollection
 }
