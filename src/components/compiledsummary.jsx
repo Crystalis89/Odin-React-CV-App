@@ -11,17 +11,17 @@ function CompiledSummary(props) {
         <section id="summary__info">
             
             <section id="summary__education">
-                <h2 id="summary__title">Education</h2>
-                <ul id="summary__list">
+                <h2 className="summary__title">Education</h2>
+                <ul className="summary__list">
                     <SummaryEducationEntryCard props={props.educationinfo} />
 
                 </ul>
             </section>
 
             <section id="summary__experience">
-                <h2 id="summary__title">Professional Experience</h2>
+                <h2 className="summary__title">Professional Experience</h2>
 
-                <ul id="summary__list">
+                <ul className="summary__list">
                     <SummaryExperienceEntryCard props={props.experienceinfo} />
                 </ul>
             </section>

@@ -13,6 +13,16 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+
+ul {
+  padding: 0;
+}
+
+li {
+    list-style: none;
+    box-shadow: 0px 1px 3px 0px white;
+}
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -37,6 +47,10 @@ body {
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+}
+
+h2, p, h3 {
+  margin: 5px;
 }
 
 button {
@@ -69,4 +83,72 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+#root {
+    display: flex;
+    font-size: 10px;
+    gap: 20px;
+    padding: 20px;
+    position: relative;
+}
+
+#button__cleardata {
+  background-color: orange;
+  position: absolute;
+  bottom: 0;
+  color: black;
+  font-weight: 900;
+  font-size: 12px;
+}
+
+#cv__container {
+    width: 30%;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#cv__container section {
+  background-color: #01011c;
+  border-radius: .3rem;
+  box-shadow: 1px 3px 8px 0px white;
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+#cv__personalinfo {
+  
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    gap: 5px;
+
+}
+
+.EXPCard, .EDUCard {
+  min-height: 20px;
+}
+
+.EXPCard:hover, .EDUCard:hover {
+    box-shadow: 0px 0px 2px 2px goldenrod;
+    border: goldenrod;
+
+}
+#compiledsummary__container {
+  flex-grow: 2;
+    background-color: #01011c;
+
+  border-radius: .3rem;
+  box-shadow: 1px 3px 8px 0px white;
+  padding: 15px;
+}
+
+
+.summary__title {
+  background-color: rgba(128, 128, 128, .3);
+  border-radius: .3rem;
 }

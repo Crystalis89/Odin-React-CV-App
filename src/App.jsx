@@ -1,6 +1,4 @@
 import { useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
 import {EducationInfoEdit, EducationEntryCard} from './components/educationinfo.jsx'
 import {ExperienceInfoEdit, ExperienceEntryCard} from './components/experienceinfo.jsx'
 import {PersonalInfoEdit, PersonalInfoTemplate} from './components/personalinfo.jsx'
@@ -161,6 +159,12 @@ function App() {
       setExpInfo(newInfo)
     }
   }
+
+  function handleClearData() {
+    setPInfo({mode:'edit', PIname:'', PIemail:'', PIphone: '', PIaddress: '', PIlinkedin: '', PIgithub:'', id:''})
+    setExpInfo([true, 'saved', -1])
+    setEduInfo([true, 'saved', -1])
+  }
   
   if (personalinfo.mode === 'saved') {
     picontent = <PersonalInfoTemplate 
@@ -249,6 +253,9 @@ function App() {
           educationinfo={educationinfo}
         />
       </section>
+      <button id='button__cleardata' onClick={handleClearData}>
+        Clear Data
+      </button>
     </>
   )
 }
